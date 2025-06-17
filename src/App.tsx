@@ -1,35 +1,58 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { generateGrid } from './utils/GenerateGrid';
+import type { Tile } from './utils/GenerateGrid';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [grid, setGrid] = useState<Tile[]>(generateGrid(5, 5));
+  const [gameOver, setGameOver] = useState(false);
+
+
+  const handleTileClick = (id: number) => {
+    if (gameOver) return;
+    setGrid(prevGrid =>
+      prevGrid.map(tile => {
+        if (tile.id === id) {
+          if (tile.isMine) {
+            setGameOver(true);
+          }
+
+          return { ...tile, revealed: true };
+        }
+        return tile;
+      })
+    );
+  };
+
+  const handleReset = () => {
+    const newGrid = generateGrid(5,5);
+    setGrid(newGrid);
+    setGameOver(false);
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 60px)', gap: '5px', padding: '20px' }}>
+        {grid.map(tile => (
+          <button
+            key={tile.id}
+            className="tile"
+            style={{
+              backgroundColor: tile.revealed
+                ? tile.isMine
+                  ? "crimson"
+                  : "seagreen"
+                : "gray",
+            }}
+            onClick={() => handleTileClick(tile.id)}
+          >
+            {tile.revealed ? (tile.isMine ? "💣" : "✅") : ""}
+          </button>
+        ))}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <button onClick={handleReset}>Reset</button>
     </>
-  )
+  );
 }
 
 export default App
