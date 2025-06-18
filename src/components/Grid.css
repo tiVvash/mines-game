@@ -1,0 +1,22 @@
+.tile {
+    width: 60px;
+    height: 60px;
+    border: 1px solid #555;
+    font-size: 24px;
+    cursor: pointer;
+
+}
+
+.tile-mine {
+    background-color: crimson;
+    color: white;
+}
+
+.tile-safe {
+    background-color: seagreen;
+    color: white;
+}
+
+.tile-hidden {
+    background-color: #0e4676;
+}

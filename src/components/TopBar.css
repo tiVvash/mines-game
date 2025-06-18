@@ -1,0 +1,16 @@
+.TopBarContainer{
+    background-color: #0c4373;
+}
+
+.InstructionButton {
+    background-color: #fb9b23;
+    color: #222;
+}
+.instructionsBox {
+    background-color: #222;
+    color: #fff;
+    padding: 16px;
+    border-radius: 8px;
+    margin-top: 10px;
+    max-width: 300px;
+  }
