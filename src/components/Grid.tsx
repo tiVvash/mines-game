@@ -1,65 +1,116 @@
-import { useState, useEffect } from 'react'
-import { generateGrid } from '../utils/GenerateGrid';
-import type { Tile } from '../utils/GenerateGrid';
-import './Grid.css'
+import { useEffect, useState } from "react";
+import { generateGrid } from "../utils/GenerateGrid";
+import type { Tile } from "../utils/GenerateGrid";
 
+type GridProps = {
+  isPlaying: boolean;
+  mines: number;
+  onGameOver: () => void;
+  multiplier: number;
+  setMultiplier: React.Dispatch<React.SetStateAction<number>>;
+  betAmount: number;
+  gameEnded: boolean;
+  isCashOut: boolean;
+  resetGameEnded: () => void;
+};
 
-export default function Grid() {
-    const [grid, setGrid] = useState<Tile[]>(generateGrid(5, 5));
-    const [gameOver, setGameOver] = useState(false);
-  
+export default function Grid({
+  isPlaying,
+  mines,
+  onGameOver,
+  multiplier,
+  setMultiplier,
+  betAmount,
+  gameEnded,
+  isCashOut,
+  resetGameEnded,
+}: GridProps) {
+  const [grid, setGrid] = useState<Tile[]>(generateGrid(5, mines));;
+  const [gameOver, setGameOver] = useState(false);
+  const [revealAll, setRevealAll] = useState(false);
 
-    useEffect(() => {
-      if (gameOver) {
-        const timer = setTimeout(() => {
-          handleReset();
-        }, 3000); 
-    
-        return () => clearTimeout(timer); 
-      }
-    }, [gameOver]);
+  const handleTileClick = (id: number) => {
+    if (gameOver || !isPlaying) return;
 
-    const handleTileClick = (id: number) => {
-        if (gameOver) return;
-        setGrid(prevGrid =>
-          prevGrid.map(tile => {
-            if (tile.id === id) {
-              if (tile.isMine) {
-                setGameOver(true);
-              }
-              return { ...tile, revealed: true };
-            }
-            return tile;
-          })
-        );
-      };
-    
-      const handleReset = () => {
-        const newGrid = generateGrid(5,5);
-        setGrid(newGrid);
+    setGrid(prevGrid =>
+      prevGrid.map(tile => {
+        if (tile.id === id && !tile.revealed) {
+          if (tile.isMine) {
+            setGameOver(true);
+            onGameOver();
+          }
+          return { ...tile, revealed: true };
+        }
+        return tile;
+      })
+    );
+
+    // Increase multiplier when clicking safe tile
+    setMultiplier(prev => parseFloat((prev + 0.2).toFixed(2)));
+  };
+
+  // Game Over (lost)
+  useEffect(() => {
+    if (gameEnded && !isCashOut) {
+      setRevealAll(true);
+
+      const timer = setTimeout(() => {
+        setRevealAll(false);
         setGameOver(false);
-      }
-    return (
-        <>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 60px)', gap: '5px', padding: '20px', backgroundColor: '#077FCC'}}>
+        setGrid(generateGrid(5, mines));
+        setMultiplier(1);
+        resetGameEnded();
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [gameEnded, isCashOut, resetGameEnded, setMultiplier, mines]);
+
+  // Cash Out (instant reset)
+  useEffect(() => {
+    if (isCashOut) {
+      setRevealAll(true);
+
+      const timer = setTimeout(() => {
+        setRevealAll(false);
+        setGameOver(false);
+        setGrid(generateGrid(5, mines));
+        setMultiplier(1);
+        resetGameEnded();
+      }, 300); // short delay
+
+      return () => clearTimeout(timer);
+    }
+  }, [isCashOut, resetGameEnded, setMultiplier, mines]);
+
+  return (
+    <>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(5, 60px)",
+          gap: "5px",
+          padding: "20px",
+        }}
+      >
         {grid.map(tile => (
           <button
             key={tile.id}
             className="tile"
             style={{
-              backgroundColor: tile.revealed
-                ? tile.isMine
-                ? 'tile tile-mine'
-                : 'tile tile-safe'
-              : 'tile tile-hidden'
+              backgroundColor:
+                revealAll || tile.revealed
+                  ? tile.isMine
+                    ? "crimson"
+                    : "seagreen"
+                  : "gray",
             }}
             onClick={() => handleTileClick(tile.id)}
           >
-            {tile.revealed ? (tile.isMine ? "💣" : "✅") : ""}
+            {revealAll || tile.revealed ? (tile.isMine ? "💣" : "✅") : ""}
           </button>
         ))}
       </div>
-      <button onClick={handleReset}>Reset</button>
-      </>
-    );
-  }
+    </>
+  );
+}

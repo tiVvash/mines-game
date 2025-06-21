@@ -1,0 +1,79 @@
+.BetContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background-color: #222c38;
+    color: white;
+    border-radius: 8px;
+    margin: 16px;
+  }
+  
+  .betColLeft, .betColRight {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .bet-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .bet-input button {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 4px;
+    border: none;
+    background-color: #3b4b5c;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .bet-input span {
+    font-size: 16px;
+    min-width: 50px;
+    text-align: center;
+  }
+  
+  .betColRight select {
+    padding: 4px 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: none;
+  }
+  
+  .betButtons {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .start-btn, .cashout-btn {
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .start-btn {
+    background-color: #2ecc71;
+    color: white;
+  }
+  
+  .cashout-btn {
+    background-color: #f39c12;
+    color: white;
+  }
+  
+  .cash-display {
+    margin-top: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4caf50; 
+  }

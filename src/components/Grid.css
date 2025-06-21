@@ -1,22 +1,31 @@
 .tile {
     width: 60px;
     height: 60px;
-    border: 1px solid #555;
+    border: none;
     font-size: 24px;
+    font-weight: bold;
+    border-radius: 8px;
     cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-}
-
-.tile-mine {
+  .tile-hidden {
+    background-color: #999999;
+  }
+  
+  .tile-safe {
+    background-color: #2ecc71;
+    color: white;
+  }
+  
+  .tile-mine {
     background-color: crimson;
     color: white;
-}
-
-.tile-safe {
-    background-color: seagreen;
-    color: white;
-}
-
-.tile-hidden {
-    background-color: #0e4676;
-}
+  }
+  
+  .tile:hover {
+    transform: scale(1.05);
+  }
