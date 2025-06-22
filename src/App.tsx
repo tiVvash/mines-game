@@ -2,6 +2,10 @@ import { useState } from "react";
 import "./App.css";
 import BetPanel from "./components/BetPanel";
 import Grid from "./components/Grid";
+import TopBar from "./components/TopBar";
+import { generateGrid } from "./utils/GenerateGrid";
+import type { Tile } from "./utils/GenerateGrid";
+import BetSettingsPanel from "./components/BetSettingsPanel";
 
 export default function App() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -11,9 +15,11 @@ export default function App() {
   const [multiplier, setMultiplier] = useState(1);
   const [gameEnded, setGameEnded] = useState(false);
   const [isCashOut, setIsCashOut] = useState(false);
+  const [grid, setGrid] = useState<Tile[]>(generateGrid(5, mines));
 
   const handleStartGame = () => {
     if (balance < betAmount) return;
+    setGrid(generateGrid(5, mines));
     setIsPlaying(true);
     setBalance(prev => parseFloat((prev - betAmount).toFixed(2)));
   };
@@ -21,7 +27,8 @@ export default function App() {
   const handleCashOut = () => {
     setBalance(prev => parseFloat((prev + betAmount * multiplier).toFixed(2)));
     setIsPlaying(false);
-    setIsCashOut(true); // will trigger Grid useEffect
+    setIsCashOut(true);
+    setMultiplier(1);
   };
 
   const handleGameOver = () => {
@@ -36,31 +43,33 @@ export default function App() {
 
   return (
     <div className="App">
-      <h1>Balance: ${balance.toFixed(2)}</h1>
+      <TopBar
+        balance={balance} />
+      <BetSettingsPanel multiplier={multiplier}
+        mines={mines}
+        setMines={setMines} isPlaying={isPlaying} />
+
+      <Grid
+        grid={grid}
+        setGrid={setGrid}
+        isPlaying={isPlaying}
+        mines={mines}
+        onGameOver={handleGameOver}
+        setMultiplier={setMultiplier}
+        gameEnded={gameEnded}
+        isCashOut={isCashOut}
+        resetGameEnded={resetGameEnded}
+      />
 
       <BetPanel
         isPlaying={isPlaying}
         betAmount={betAmount}
         setBetAmount={setBetAmount}
-        mines={mines}
-        setMines={setMines}
         onStartGame={handleStartGame}
         onCashOut={handleCashOut}
-        balance={balance}         
-        multiplier={multiplier}     
-        gameEnded={gameEnded}  
-      />
-
-      <Grid
-        isPlaying={isPlaying}
-        mines={mines}
-        onGameOver={handleGameOver}
         multiplier={multiplier}
-        setMultiplier={setMultiplier}
-        betAmount={betAmount}
         gameEnded={gameEnded}
-        isCashOut={isCashOut}
-        resetGameEnded={resetGameEnded}
+
       />
     </div>
   );

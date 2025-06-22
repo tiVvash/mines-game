@@ -1,10 +1,14 @@
 import { useState } from "react"
 import './TopBar.css'
-export default function TopBar() {
+type TopBarProps = {
+    balance: number;
+  
+}
+export default function TopBar({ balance }: TopBarProps) {
     const [showInstructions, setShowInstructions] = useState(false);
     return (
         <div className='TopBarContainer'>
-            <div className=''>
+            <div className='BarContainer'>
                 <select name="mines" id="mines.id">
                     <option value="Dice">Dice</option>
                 </select>
@@ -13,7 +17,7 @@ export default function TopBar() {
                     <div className="instructionsBox">
                         <div>
                             <h3>How to Play</h3>
-                            <button>X</button>
+                            <button onClick={() => setShowInstructions(false)}>X</button>
                         </div>
                         <div>
                             <p>Each tile hides either a star or a mine.</p>
@@ -21,8 +25,9 @@ export default function TopBar() {
                         </div>
                     </div>
                 )}
+                    <p>{balance.toFixed(2)} USD</p>
             </div>
-            <div className=''></div>
+            
         </div>
     )
 }

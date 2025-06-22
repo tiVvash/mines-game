@@ -1,0 +1,30 @@
+.BetSettingsContainer{
+    width: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #085190;
+    border-radius: 10px;
+    height: 20px;
+    margin: 5px 0 0 0;
+    padding: 4px 15px;
+    
+}
+.ColRight{
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.ColRight select {
+    height: 20px;
+}
+
+@media (max-width: 600px) {
+    .BetSettingsContainer {
+      width: 94%;
+      height: auto;
+      padding: 0 10px;
+      gap: 0px;
+    }
+  }
